@@ -51,13 +51,29 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function holdFirstFrame(video) {
+  if (!video) return;
+  video.muted = true;
+  video.playsInline = true;
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
   const freeze = () => {
     if (state.opened) return;
-    try { video.currentTime = 0.05; } catch (error) {}
+    try { video.currentTime = 0.08; } catch (error) {}
     video.pause();
   };
-  video.addEventListener("loadeddata", freeze);
-  if (video.readyState >= 2) freeze();
+  ["loadedmetadata", "loadeddata", "canplay"].forEach((eventName) => {
+    video.addEventListener(eventName, freeze);
+  });
+  if (video.readyState >= 1) freeze();
+  // Soft muted play→pause so mobile browsers actually paint the first frame.
+  const kick = video.play();
+  if (kick && typeof kick.then === "function") {
+    kick.then(() => {
+      if (!state.opened) freeze();
+    }).catch(() => {
+      freeze();
+    });
+  }
 }
 
 function openDoor() {

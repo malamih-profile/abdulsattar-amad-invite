@@ -31,16 +31,29 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   inset: 0;
   z-index: 40;
   overflow: hidden;
-  background: #1c1612;
+  background: #1c1612 url("assets/door-poster.jpg") center / cover no-repeat;
 }
+.gate__poster,
 .gate__video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: #1c1612;
 }
+.gate__poster {
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+.gate__video {
+  z-index: 1;
+  background: transparent;
+  opacity: 0;
+  transition: opacity .15s ease;
+}
+.gate.is-open .gate__video { opacity: 1; }
+.gate.is-open .gate__poster { opacity: 0; transition: opacity .2s ease; }
 .hall {
   position: absolute;
   inset: 0;

@@ -21,15 +21,16 @@ const state = {
   attendance: "yes",
   muted: false,
   opened: false,
+  revealed: false,
   captionIndex: -1,
   captionTimers: [],
+  revealTimer: 0,
+  resumeTimer: 0,
 };
 const $ = (id) => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", () => {
-  holdFirstFrame($("introVideo"));
-  $("introVideo").addEventListener("ended", revealSite);
-  $("introVideo").addEventListener("timeupdate", syncCaptions);
+  prepareIntroVideo($("introVideo"));
   $("openDoor").addEventListener("click", openDoor);
   $("musicButton").addEventListener("click", toggleMusic);
   $("rsvpForm").addEventListener("submit", submitRsvp);
@@ -50,30 +51,21 @@ document.addEventListener("DOMContentLoaded", () => {
   renderWishes(loadWishes());
 });
 
-function holdFirstFrame(video) {
+function prepareIntroVideo(video) {
   if (!video) return;
   video.muted = true;
   video.playsInline = true;
+  video.preload = "auto";
   video.setAttribute("playsinline", "");
   video.setAttribute("webkit-playsinline", "");
-  const freeze = () => {
-    if (state.opened) return;
-    try { video.currentTime = 0.08; } catch (error) {}
-    video.pause();
-  };
-  ["loadedmetadata", "loadeddata", "canplay"].forEach((eventName) => {
-    video.addEventListener(eventName, freeze);
-  });
-  if (video.readyState >= 1) freeze();
-  // Soft muted play→pause so mobile browsers actually paint the first frame.
-  const kick = video.play();
-  if (kick && typeof kick.then === "function") {
-    kick.then(() => {
-      if (!state.opened) freeze();
-    }).catch(() => {
-      freeze();
-    });
-  }
+  video.addEventListener("ended", () => revealSite());
+  video.addEventListener("error", () => revealSite());
+  video.addEventListener("timeupdate", onIntroProgress);
+  video.addEventListener("pause", onIntroPause);
+  video.addEventListener("stalled", keepIntroAlive);
+  video.addEventListener("waiting", keepIntroAlive);
+  // Never autoplay/pause-kick here — that was freezing playback mid-video on mobile.
+  try { video.pause(); } catch (error) {}
 }
 
 function openDoor() {
@@ -88,16 +80,65 @@ function openDoor() {
     line.textContent = "";
     line.classList.remove("is-in", "is-out");
   }
+
   const intro = $("introVideo");
   intro.muted = true;
-  intro.currentTime = 0;
-  intro.play().catch(() => revealSite());
-  playMusic();
+  intro.loop = false;
+  const startPlayback = () => {
+    const playAttempt = intro.play();
+    if (playAttempt && typeof playAttempt.catch === "function") {
+      playAttempt.catch(() => revealSite());
+    }
+  };
+  if (intro.readyState >= 1) {
+    try { intro.currentTime = 0; } catch (error) {}
+  }
+  if (intro.seeking) {
+    intro.addEventListener("seeked", startPlayback, { once: true });
+  } else {
+    startPlayback();
+  }
+
+  // Hard fallback: never leave the page locked if ended never fires.
+  const durationMs = ((Number(intro.duration) > 0 ? intro.duration : 10) + 1.25) * 1000;
+  window.clearTimeout(state.revealTimer);
+  state.revealTimer = window.setTimeout(() => revealSite(), Math.min(durationMs, 14000));
+
+  // Start music slightly after video so phones don't pause the intro clip.
+  window.setTimeout(() => playMusic(), 450);
 }
 
-function syncCaptions() {
-  if (!state.opened || $("gate").hidden) return;
-  const time = Number($("introVideo").currentTime || 0);
+function onIntroProgress() {
+  if (!state.opened || state.revealed) return;
+  const intro = $("introVideo");
+  const time = Number(intro.currentTime || 0);
+  const duration = Number(intro.duration || 0);
+  syncCaptions(time);
+  if (duration > 0 && time >= duration - 0.2) revealSite();
+}
+
+function onIntroPause() {
+  if (!state.opened || state.revealed) return;
+  const intro = $("introVideo");
+  if (!intro || intro.ended) return;
+  window.clearTimeout(state.resumeTimer);
+  state.resumeTimer = window.setTimeout(() => {
+    if (!state.opened || state.revealed || !intro.paused || intro.ended) return;
+    intro.muted = true;
+    intro.play().catch(() => revealSite());
+  }, 180);
+}
+
+function keepIntroAlive() {
+  if (!state.opened || state.revealed) return;
+  const intro = $("introVideo");
+  if (!intro || intro.ended) return;
+  intro.muted = true;
+  if (intro.paused) intro.play().catch(() => {});
+}
+
+function syncCaptions(time) {
+  if (!state.opened || state.revealed) return;
   let index = -1;
   for (let i = INTRO_LINES.length - 1; i >= 0; i -= 1) {
     if (time >= INTRO_LINES[i].at) {
@@ -130,8 +171,17 @@ function clearCaptionTimers() {
 }
 
 function revealSite() {
-  if ($("site") && !$("site").hidden) return;
+  if (state.revealed) return;
+  state.revealed = true;
+  window.clearTimeout(state.revealTimer);
+  window.clearTimeout(state.resumeTimer);
   clearCaptionTimers();
+
+  const intro = $("introVideo");
+  if (intro) {
+    try { intro.pause(); } catch (error) {}
+  }
+
   const box = $("storyCaptions");
   if (box) box.hidden = true;
 
@@ -146,9 +196,11 @@ function revealSite() {
   site.hidden = false;
   site.classList.add("is-revealing");
   document.body.classList.remove("locked");
+  playMusic();
 
   window.setTimeout(() => {
-    $("gate").hidden = true;
+    const gate = $("gate");
+    if (gate) gate.hidden = true;
     window.scrollTo(0, 0);
     site.classList.add("is-ready");
   }, 320);

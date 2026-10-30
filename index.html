@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>دعوة خطوبة عبدالستار &amp; أمد</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="classic.css">
+</head>
+<body class="locked">
+  <section id="gate" class="gate" aria-label="فتح الدعوة">
+    <video id="introVideo" class="gate__video" src="assets/door-intro.mp4" playsinline preload="auto" muted></video>
+    <button id="openDoor" class="plaque" type="button">
+      <span class="plaque__glow" aria-hidden="true"></span>
+      <span class="plaque__orn" aria-hidden="true">✦</span>
+      <small class="plaque__eyebrow">دعوة خطوبة</small>
+      <strong class="plaque__title">افتح الباب</strong>
+      <em class="plaque__hint">اضغط للدخول إلى الدعوة</em>
+      <span class="plaque__names">عبدالستار <i>&amp;</i> أمد</span>
+      <span class="plaque__line" aria-hidden="true"></span>
+    </button>
+    <div id="storyCaptions" class="story-captions" aria-live="polite" hidden>
+      <p id="storyCaption"></p>
+    </div>
+  </section>
+
+  <button id="musicButton" class="music" type="button" aria-pressed="false" aria-label="الموسيقى">♫</button>
+  <audio id="bgMusic" src="assets/music-all.mp3" preload="auto" loop playsinline></audio>
+  <div id="flare" class="flare" aria-hidden="true"></div>
+
+  <main id="site" class="site" hidden>
+    <section class="hero">
+      <div class="hero__frame">
+        <img class="hero__photo" src="assets/couple.jpg" alt="">
+        <div class="hero__shine"></div>
+      </div>
+      <div class="hero__overlay"></div>
+      <div class="hero__vignette"></div>
+      <div class="hero__fade"></div>
+      <div class="hero__content">
+        <p class="hero__eyebrow hero-line" style="--d:.1s">بسم الله الرحمن الرحيم</p>
+        <h1 class="hero__names-row hero-line" style="--d:.45s"><span>عبدالستار</span><i>&amp;</i><span>أمد</span></h1>
+        <p class="hero__invite hero-line" style="--d:.85s">يتشرّفان بدعوتكم لمشاركتهما فرحة العمر</p>
+        <div class="ornament hero-line" style="--d:1.15s"><span></span><b>☙</b><span></span></div>
+        <p class="hero__date hero-line" style="--d:1.4s">يوم الجمعة، ٢٠ تشرين الثاني ٢٠٢٦</p>
+        <p class="hero__caption hero-line" style="--d:1.7s">حكاية عمرٍ تبدأ</p>
+      </div>
+      <a class="hero__scroll" href="#countdown">
+        <span>مرّر للأسفل</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+    </section>
+
+    <article class="card">
+      <div class="frame">
+        <section class="section">
+          <p class="verse">اللّهُمَّ بارِكْ لهُما وبارِكْ عليهِما واجمَعْ بينهُما في خير</p>
+        </section>
+        <div class="divider">◆</div>
+        <section class="section">
+          <h2>بطاقة دعوة</h2>
+          <p class="invite-copy">بقلوبٍ مفعمةٍ بالفرح والسرور، نتشرّف بدعوتكم لمشاركتنا أجمل لحظات حياتنا في حفل خطوبتنا. حضوركم شرفٌ لنا وبهجةٌ تكتمل بها فرحتنا.</p>
+        </section>
+        <section class="section families">
+          <div class="family">
+            <span class="family__label">والدا الخطيب</span>
+            <p>نجل السيد احمد صبحي والسيدة وفاء</p>
+          </div>
+          <span class="diamond">◆</span>
+          <div class="family">
+            <span class="family__label">والدا الخطيبة</span>
+            <p>كريمة السيد احمد حميد و السيدة حواء</p>
+          </div>
+        </section>
+        <div class="divider">◆</div>
+        <section id="countdown" class="section">
+          <h2>يبدأ الاحتفال بعد</h2>
+          <div id="clock" class="countdown">
+            <div><strong id="days">٠٠</strong><span>يوم</span></div>
+            <div><strong id="hours">٠٠</strong><span>ساعة</span></div>
+            <div><strong id="minutes">٠٠</strong><span>دقيقة</span></div>
+            <div><strong id="seconds">٠٠</strong><span>ثانية</span></div>
+          </div>
+          <p id="arrived" class="arrived" hidden>حلّ موعد الفرح</p>
+        </section>
+
+        <div class="divider">◆</div>
+        <section class="section">
+          <h2>الموقع</h2>
+          <p class="when-date">يوم الجمعة، ٢٠ تشرين الثاني ٢٠٢٦</p>
+          <p class="when-time">الساعة السابعة مساءً</p>
+          <p class="venue-name">قاعة رؤية دجلة</p>
+          <p class="venue-addr">بغداد – خدمي مطار بغداد، مقابيل كلية الرشيد</p>
+          <div class="map-frame">
+            <iframe title="خريطة القاعة" src="https://maps.google.com/maps?q=%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF%20%D8%AE%D8%AF%D9%85%D9%8A%20%D9%85%D8%B7%D8%A7%D8%B1%20%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF%20%D9%83%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF&z=15&hl=ar&output=embed" loading="lazy"></iframe>
+          </div>
+          <a class="map-link" href="https://maps.app.goo.gl/YCAQhh3VbDRDPpgC7" target="_blank" rel="noopener">⚲ الخريطة</a>
+        </section>
+        <div class="divider">◆</div>
+        <section class="section">
+          <h2>ملاحظات</h2>
+          <ul class="notes">
+            <li>يُرجى الحضور قبل الموعد بنصف ساعة</li>
+            <li>نتشرّف بحضوركم بأبهى حلّة</li>
+            <li>الدعوة تشمل حاملها والعائلة الكريمة</li>
+          </ul>
+        </section>
+        <div class="divider">◆</div>
+        <footer class="section closing">
+          <p class="closing__note">حضوركم يزيّن فرحتنا</p>
+          <p class="hashtag">#عبدالستار_وأمد</p>
+        </footer>
+      </div>
+    </article>
+
+
+    <section class="save-date">
+      <p class="cal-title">احفظ الموعد 🤍</p>
+      <div class="cal">
+        <div class="cal-top">تشرين الثاني 2026</div>
+        <div class="cal-body">
+          <div class="cal-wd">الجمعة</div>
+          <div class="cal-day">20</div>
+          <div class="cal-time">الساعة السابعة مساءً</div>
+        </div>
+        <div class="cal-foot">
+          <p class="cal-cap">📲 أضِف الموعد إلى تقويم هاتفك بضغطة</p>
+          <div class="cal-btns">
+            <a id="googleCal" href="#" target="_blank" rel="noopener">تقويم جوجل</a>
+            <a id="appleCal" href="#">تقويم آيفون</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rsvp" class="rsvp">
+      <div class="rsvp-card rsvp-card--important">
+        <p class="rsvp-kicker">ضروري ✦</p>
+        <h3>تأكيد الحضور</h3>
+        <p class="sub">يرجى تأكيد حضوركم لأهميته في ترتيب الحفل</p>
+        <form id="rsvpForm">
+          <label for="guestName">الاسم الكريم</label>
+          <input id="guestName" required maxlength="80" placeholder="اسمك">
+          <label>هل ستحضر؟</label>
+          <div class="pills" id="attendance">
+            <button type="button" class="pill is-on" data-v="yes" aria-pressed="true">نعم</button>
+            <button type="button" class="pill" data-v="no" aria-pressed="false">لا</button>
+            <button type="button" class="pill" data-v="maybe" aria-pressed="false">ربما</button>
+          </div>
+          <label>عدد المرافقين (عدا حضورك — ٠ إن كنت وحدك)</label>
+          <div class="step">
+            <button type="button" id="minus" aria-label="أنقص">−</button>
+            <span id="guestCount">٠</span>
+            <button type="button" id="plus" aria-label="زِد">+</button>
+          </div>
+          <label for="wishText">كلمة للمخطوبين 💍</label>
+          <textarea id="wishText" rows="2" maxlength="300" placeholder="اكتب تهنئتك للمخطوبين..."></textarea>
+          <button class="send" type="submit">إرسال التأكيد</button>
+          <p id="formNote" class="form-note" hidden>وصلَنا تأكيدكم، شكراً لفرحتكم معنا</p>
+        </form>
+      </div>
+      <div class="wishes">
+        <h3>كلمات المهنّئين 🤍</h3>
+        <div id="wishList" class="wish-list"></div>
+      </div>
+    </section>
+  </main>
+  <script src="classic.js"></script>
+</body>
+</html>
